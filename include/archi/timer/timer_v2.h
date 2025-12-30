@@ -236,6 +236,7 @@ typedef union {
     unsigned int one_s           :1 ; // Timer high one shot configuration bitfield: - 1'b0: let Timer high enabled counting when compare match with CMP_LO occurs. - 1'b1: disable Timer high when compare match with CMP_LO occurs.
     unsigned int pen             :1 ; // Timer high prescaler enable configuration bitfield: - 1'b0: disabled - 1'b1: enabled
     unsigned int clkcfg          :1 ; // Timer high clock source configuration bitfield: - 1'b0: FLL or FLL+Prescaler - 1'b1: Reference clock at 32kHz
+    unsigned int pval            :8 ; // Timer high prescaler value bitfield. Ftimer = Fclk / (1 + PRESC_VAL)
   };
   unsigned int raw;
 } __attribute__((packed)) timer_cfg_hi_t;
