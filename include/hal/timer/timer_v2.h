@@ -20,6 +20,19 @@
 #include "hal/pulp.h"
 #include "archi/timer/timer_v2.h"
 
+/**
+  * hardware provide 2 (apb_)timer
+  * timer lo and timer hi
+  * both timer can be cascaded to count to 64-bit value
+  */
+enum timer_id_e
+{
+  TIMER_LO,
+  TIMER_HI
+};
+
+typedef    enum timer_id_e    timer_id_t;
+
 
 #ifdef ARCHI_HAS_FC
 
@@ -53,51 +66,132 @@ static inline unsigned int timer_base_cl(int cid, int id, int sub_id)
 #endif
 
 
-static inline unsigned int timer_conf_get(unsigned int addr)
+static inline unsigned int timer_conf_get(unsigned int addr, timer_id_t id)
 {
-  return timer_cfg_lo_get(addr);
+  switch (id)
+  {
+  case (TIMER_LO):
+    /**
+      * use cfg get from archi
+      * (multiple return is forbidden by MISRA-C?)
+      */
+    return timer_cfg_lo_get(addr);
+    break;
+  case (TIMER_HI):
+    return timer_cfg_hi_get(addr);
+    break;
+  }
+
+  /**
+    * if @arg id is set properly, this line should never be reached
+    * (this break MISRA-C?)
+    */
+  return 0;
 }
 
 
-static inline void timer_conf_set(unsigned int addr, unsigned int value)
+static inline void timer_conf_set(unsigned int addr, timer_id_t id, unsigned int value)
 {
-  timer_cfg_lo_set(addr, value);
+  switch (id)
+  {
+  case (TIMER_LO):
+    timer_cfg_lo_set(addr, value);
+    break;
+  case (TIMER_HI):
+    timer_cfg_hi_set(addr, value);
+    break;
+
+  /* do nothing for invalid id */
+  }
 }
 
 
-static inline unsigned int timer_count_get(unsigned int addr)
+static inline unsigned int timer_count_get(unsigned int addr, timer_id_t id)
 {
-  return timer_cnt_lo_get(addr);
+  switch (id)
+  {
+  case (TIMER_LO):
+    return timer_cnt_lo_get(addr);
+    break;
+  case (TIMER_HI):
+    return timer_cnt_hi_get(addr);
+    break;
+  }
+
+  /* invalid case */
+  return 0;
 }
 
 
-static inline void timer_count_set(unsigned int addr, unsigned int value)
+static inline void timer_count_set(unsigned int addr, timer_id_t id, unsigned int value)
 {
-  timer_cnt_lo_set(addr, value);
+  switch (id)
+  {
+  case (TIMER_LO):
+    timer_cnt_lo_set(addr, value);
+    break;
+  case (TIMER_HI):
+    timer_cnt_hi_set(addr, value);
+    break;
+  }
 }
 
 
-static inline unsigned int timer_cmp_get(unsigned int addr)
+static inline unsigned int timer_cmp_get(unsigned int addr, timer_id_t id)
 {
-  return timer_cmp_lo_get(addr);
+  switch (id)
+  {
+  case (TIMER_LO):
+    return timer_cmp_lo_get(addr);
+    break;
+  case (TIMER_HI):
+    return timer_cmp_hi_get(addr);
+    break;
+  }
+
+  return 0;
 }
 
 
-static inline void timer_cmp_set(unsigned int addr, unsigned int cmp)
+static inline void timer_cmp_set(unsigned int addr, timer_id_t id, unsigned int cmp)
 {
-  timer_cmp_lo_set(addr, cmp);
+  switch (id)
+  {
+  case (TIMER_LO):
+    timer_cmp_lo_set(addr, cmp);
+    break;
+  case (TIMER_HI):
+    timer_cmp_hi_set(addr, cmp);
+    break;
+  }
 }
 
 
-static inline void timer_reset(unsigned int addr)
+static inline void timer_reset(unsigned int addr, timer_id_t id)
 {
-  timer_reset_lo_set(addr, 1);
+  switch (id)
+  {
+  case (TIMER_LO):
+    timer_reset_lo_set(addr, 1);
+    break;
+  case (TIMER_HI):
+    timer_reset_hi_set(addr, 1);
+    break;
+  }
 }
 
 
-static inline void timer_start(unsigned int addr)
+static inline void timer_start(unsigned int addr, timer_id_t id)
 {
-  timer_start_lo_set(addr, 1);
+  switch (id)
+  {
+  case (TIMER_LO):
+    timer_start_lo_set(addr, 1);
+    break;
+  case (TIMER_HI):
+    timer_start_hi_set(addr, 1);
+    break;
+  }
 }
 
 

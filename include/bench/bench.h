@@ -21,17 +21,21 @@
 #include "pulp.h"
 #include <stdint.h>
 
+#define BENCH_TIMER_ID   TIMER_LO
+
 #if defined(TIMER_VERSION) && TIMER_VERSION == 1
 
-static inline void start_timer() {*(volatile int*) START_TIME_ADDR = 1;}
+/* ignore cluster id */
 
-static inline void stop_timer() {*(volatile int*) STOP_TIME_ADDR = 1;}
+static inline void start_timer(int cid) {(void) cid; *(volatile int*) START_TIME_ADDR = 1;}
 
-static inline void reset_timer() {*(volatile int*) RESET_TIME_ADDR = 1;}
+static inline void stop_timer(int cid) {(void) cid; *(volatile int*) STOP_TIME_ADDR = 1;}
 
-static inline int get_time() {return *(volatile int*) GET_TIME_LO_ADDR;}
+static inline void reset_timer(int cid) {(void) cid; *(volatile int*) RESET_TIME_ADDR = 1;}
 
-static inline int get_time_hi() {return *(volatile int*) GET_TIME_HI_ADDR;}
+static inline int get_time(int cid) {(void) cid; return *(volatile int*) GET_TIME_LO_ADDR;}
+
+static inline int get_time_hi(int cid) {(void) cid; return *(volatile int*) GET_TIME_HI_ADDR;}
 
 #else
 
@@ -39,44 +43,48 @@ static inline int get_time_hi() {return *(volatile int*) GET_TIME_HI_ADDR;}
 
 static inline void start_timer(int cid)
 {
-  timer_start(timer_base_cl(cid, 0, 1));
+  timer_start(timer_base_cl(cid, 0, 1), BENCH_TIMER_ID);
 }
 
 static inline void stop_timer(int cid)
 {
-  timer_conf_set(timer_base_cl(cid, 0, 1), 0);
+  timer_conf_set(timer_base_cl(cid, 0, 1), BENCH_TIMER_ID, 0);
 }
 
 static inline void reset_timer(int cid)
 {
-  timer_reset(timer_base_cl(cid, 0, 1));
+  timer_reset(timer_base_cl(cid, 0, 1), BENCH_TIMER_ID);
 }
 
 static inline int get_time(int cid)
 {
-  return timer_count_get(timer_base_cl(cid, 0, 1));
+  return timer_count_get(timer_base_cl(cid, 0, 1), BENCH_TIMER_ID);
 }
 
 #else
 
-static inline void start_timer()
+static inline void start_timer(int cid)
 {
-  timer_start(timer_base_fc(0, 1));
+  (void) cid;
+  timer_start(timer_base_fc(0, 1), BENCH_TIMER_ID);
 }
 
-static inline void stop_timer()
+static inline void stop_timer(int cid)
 {
-  timer_conf_set(timer_base_fc(0, 1), 0);
+  (void) cid;
+  timer_conf_set(timer_base_fc(0, 1), BENCH_TIMER_ID, 0);
 }
 
-static inline void reset_timer()
+static inline void reset_timer(int cid)
 {
-  timer_reset(timer_base_fc(0, 1));
+  (void) cid;
+  timer_reset(timer_base_fc(0, 1), BENCH_TIMER_ID);
 }
 
-static inline int get_time()
+static inline int get_time(int cid)
 {
-  return timer_count_get(timer_base_fc(0, 1));
+  (void) cid;
+  return timer_count_get(timer_base_fc(0, 1), BENCH_TIMER_ID);
 }
 
 #endif
