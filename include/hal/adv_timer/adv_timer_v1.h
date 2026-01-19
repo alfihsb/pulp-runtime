@@ -22,11 +22,18 @@ extern "C"
 {
 #endif
 
+
 int adv_timer_get_timer_and_channel_from_io(unsigned int gpio, unsigned int mux_index,
 	size_t *timer, size_t *channel);
 
+void adv_timer_disable(size_t timer); /* stop */
+void adv_timer_start(size_t timer);
+void adv_timer_reset(size_t timer);
+
 void adv_timer_enable_clock(size_t timer);
 void adv_timer_disable_clock(size_t timer);
+
+void adv_timer_config_frequency(size_t timer, uint8_t clock_prescaler, uint32_t counter_threshold);
 
 
 #ifdef __cplusplus

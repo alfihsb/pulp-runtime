@@ -167,6 +167,43 @@ int adv_timer_get_timer_and_channel_from_io(unsigned int gpio, unsigned int mux_
 }
 
 
+
+void adv_timer_disable(size_t timer)
+{
+	uint32_t tn_cmd = 0;
+
+	/* stop timer then stop clock */
+	tn_cmd = ADV_TIMER_TN_CMD_STOP_SET(tn_cmd, 0x01);
+	adv_timer_tn_cmd_set(ARCHI_ADV_TIMER_ADDR, timer, tn_cmd);
+
+	adv_timer_disable_clock(timer);
+}
+
+void adv_timer_start(size_t timer)
+{
+	uint32_t tn_cmd = 0;
+
+	/* start timer then start clock */
+	tn_cmd = ADV_TIMER_TN_CMD_START_SET(tn_cmd, 0x01);
+	adv_timer_tn_cmd_set(ARCHI_ADV_TIMER_ADDR, timer, tn_cmd);
+
+	adv_timer_enable_clock(timer);
+}
+
+void adv_timer_reset(size_t timer)
+{
+	uint32_t tn_cmd = 0;
+
+	/* stop timer */
+	adv_timer_disable(timer);
+
+	/* reset timer */
+	tn_cmd = ADV_TIMER_TN_CMD_RESET_SET(tn_cmd, 0x01);
+	adv_timer_tn_cmd_set(ARCHI_ADV_TIMER_ADDR, timer, tn_cmd);
+}
+
+
+
 /**
 	* enable timer clock
 	*/
@@ -221,4 +258,62 @@ void adv_timer_disable_clock(size_t timer)
 		break;
 	/*default:*/ /* error: label at end of compound statement */
 	}
+}
+
+void adv_timer_config_frequency(size_t timer, uint8_t clock_prescaler, uint32_t counter_threshold)
+{
+	uint32_t   tn_cmd = 0;
+	uint32_t   tn_config;
+	uint32_t   tn_threshold = 0;
+
+	/**
+		* set timer clock source
+		* for now, supported timer clock source (clock for counting)
+		* is only FLL clock
+		*/
+	/*(void) clock_src;*/
+
+	/* read current configuration */
+	tn_config = adv_timer_tn_config_get(ARCHI_ADV_TIMER_ADDR, timer);
+
+	/**
+		* set clock source
+		* FIXME: for now we only support FLL clock as counter clock
+		*/
+
+	/* ignore insel */
+	/*ADV_TIMER_TN_CONFIG_INSEL_SET(tn_config, );*/
+
+	/* trigger counting every clock */
+	tn_config = ADV_TIMER_TN_CONFIG_MODE_SET(tn_config, 0x00);
+
+	/* use FLL as source clock */
+	tn_config = ADV_TIMER_TN_CONFIG_CLKSEL_SET(tn_config, 0x00);
+
+	/* set prescaler for slower counting */
+	tn_config = ADV_TIMER_TN_CONFIG_PRESC_SET(tn_config, clock_prescaler);
+
+
+	/* set threshold */
+	tn_threshold = ADV_TIMER_TN_THRESHOLD_TH_LO_SET(tn_threshold,
+		(counter_threshold >> ADV_TIMER_TN_THRESHOLD_TH_LO_BIT) &
+			(ADV_TIMER_TN_THRESHOLD_TH_LO_MASK >> ADV_TIMER_TN_THRESHOLD_TH_LO_BIT)
+		);
+	tn_threshold = ADV_TIMER_TN_THRESHOLD_TH_HI_SET(tn_threshold,
+		(counter_threshold >> ADV_TIMER_TN_THRESHOLD_TH_HI_BIT) &
+			(ADV_TIMER_TN_THRESHOLD_TH_HI_MASK >> ADV_TIMER_TN_THRESHOLD_TH_HI_BIT)
+		);
+
+	/* create command update */
+	tn_cmd = ADV_TIMER_TN_CMD_UPDATE_SET(tn_cmd, 0x01);
+
+
+	/* write register */
+
+	/* set config and threshold */
+	adv_timer_tn_config_set(ARCHI_ADV_TIMER_ADDR, timer, tn_config);
+	adv_timer_tn_threshold_set(ARCHI_ADV_TIMER_ADDR, timer, tn_threshold);
+
+	/* then set update */
+	adv_timer_tn_cmd_set(ARCHI_ADV_TIMER_ADDR, timer, tn_cmd);
 }
