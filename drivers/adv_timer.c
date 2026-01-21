@@ -14,19 +14,21 @@
 
 
 /**
-	* from given gpio pin index/number and mux_index, check which timer and channel connected to it
+	* from given gpio pin index/number and mux_index,
+	* check which timer and channel connected to it
 	*
 	* arg:
 	*          input  gpio:      index of gpio
 	*          input  mux_index: index of mux value
-	*          output timer:     index of adv timer unit
-	*          output channel:   index of channel of the adv timer unit
+	*          output timer:     index of adv timer unit (0-3)
+	*          output channel:   index of channel of the adv timer unit (0-3)
 	*
 	* return:
 	*          0: success
 	*          non-zero: fail / given gpio pin don't have timer channel
 	*/
-int adv_timer_get_timer_and_channel_from_io(unsigned int gpio, unsigned int mux_index,
+int adv_timer_get_timer_and_channel_from_io(
+	unsigned int gpio, unsigned int mux_index,
 	size_t *timer, size_t *channel)
 {
 	/* initialize retval to always return fail */
@@ -155,12 +157,14 @@ int adv_timer_get_timer_and_channel_from_io(unsigned int gpio, unsigned int mux_
 		case (62):
 		case (63):
 			break;
-		/*default:*/ /* of switch (gpio) */   /* error: label at end of compound statement */
+		/*default:*/ /* of switch (gpio) */
+			/* error: label at end of compound statement */
 		}
 		break; /* from switch (mux_index) */
 	case (3): /* no timer channel in any gpio for mux 3 */
 		break;
-	/*default:*/ /* of switch (mux_index) */  /* error: label at end of compound statement */
+	/*default:*/ /* of switch (mux_index) */
+		/* error: label at end of compound statement */
 	}
 
 	return retval;
@@ -168,7 +172,36 @@ int adv_timer_get_timer_and_channel_from_io(unsigned int gpio, unsigned int mux_
 
 
 
-void adv_timer_disable(size_t timer)
+/**
+	* start timer by send start command to timer and enabling timer clock
+	*
+	* arg:
+	*          input  timer:     index timer (0-3)
+	*
+	* return:
+	*          (none)
+	*/
+void adv_timer_start(size_t timer)
+{
+	uint32_t tn_cmd = 0;
+
+	adv_timer_enable_clock(timer);
+
+	/* start timer then start clock */
+	tn_cmd = ADV_TIMER_TN_CMD_START_SET(tn_cmd, 0x01);
+	adv_timer_tn_cmd_set(ARCHI_ADV_TIMER_ADDR, timer, tn_cmd);
+}
+
+/**
+	* stop timer and disable clock to timer
+	*
+	* arg:
+	*          input  timer:     index timer (0-3)
+	*
+	* return:
+	*          (none)
+	*/
+void adv_timer_stop(size_t timer)
 {
 	uint32_t tn_cmd = 0;
 
@@ -179,23 +212,22 @@ void adv_timer_disable(size_t timer)
 	adv_timer_disable_clock(timer);
 }
 
-void adv_timer_start(size_t timer)
-{
-	uint32_t tn_cmd = 0;
-
-	/* start timer then start clock */
-	tn_cmd = ADV_TIMER_TN_CMD_START_SET(tn_cmd, 0x01);
-	adv_timer_tn_cmd_set(ARCHI_ADV_TIMER_ADDR, timer, tn_cmd);
-
-	adv_timer_enable_clock(timer);
-}
-
-void adv_timer_reset(size_t timer)
+/**
+	* stop timer, disable clock to timer,
+	* and reset timer (reset counter, pwm state, etc.)
+	*
+	* arg:
+	*          input  timer:     index timer (0-3)
+	*
+	* return:
+	*          (none)
+	*/
+void adv_timer_stop_and_reset(size_t timer)
 {
 	uint32_t tn_cmd = 0;
 
 	/* stop timer */
-	adv_timer_disable(timer);
+	adv_timer_stop(timer);
 
 	/* reset timer */
 	tn_cmd = ADV_TIMER_TN_CMD_RESET_SET(tn_cmd, 0x01);
@@ -203,9 +235,33 @@ void adv_timer_reset(size_t timer)
 }
 
 
+/**
+	* update timer setting (useful when timer is already started)
+	*
+	* arg:
+	*          input  timer:     index timer (0-3)
+	*
+	* return:
+	*          (none)
+	*/
+void adv_timer_update(size_t timer)
+{
+	uint32_t tn_cmd = 0;
+
+	/* reset timer */
+	tn_cmd = ADV_TIMER_TN_CMD_UPDATE_SET(tn_cmd, 0x01);
+	adv_timer_tn_cmd_set(ARCHI_ADV_TIMER_ADDR, timer, tn_cmd);
+}
+
 
 /**
 	* enable timer clock
+	*
+	* arg:
+	*          input  timer:     index timer (0-3)
+	*
+	* return:
+	*          (none)
 	*/
 void adv_timer_enable_clock(size_t timer)
 {
@@ -233,7 +289,13 @@ void adv_timer_enable_clock(size_t timer)
 }
 
 /**
-	* disable clock
+	* disable timer clock
+	*
+	* arg:
+	*          input  timer:     index timer (0-3)
+	*
+	* return:
+	*          (none)
 	*/
 void adv_timer_disable_clock(size_t timer)
 {
@@ -260,9 +322,21 @@ void adv_timer_disable_clock(size_t timer)
 	}
 }
 
-void adv_timer_config_frequency(size_t timer, uint8_t clock_prescaler, uint32_t counter_threshold)
+/**
+	* set timer frequency by setting clock source, prescaler,
+	* and counter threshold
+	*
+	* arg:
+	*          input  timer:             index timer (0-3)
+	*          input  clock_prescaler:   clock divider to counter
+	*          input  counter_threshold: counter threshold when counter restart
+	*
+	* return:
+	*          (none)
+	*/
+void adv_timer_config_frequency(size_t timer,
+	uint8_t clock_prescaler, uint16_t counter_threshold)
 {
-	uint32_t   tn_cmd = 0;
 	uint32_t   tn_config;
 	uint32_t   tn_threshold = 0;
 
@@ -290,22 +364,21 @@ void adv_timer_config_frequency(size_t timer, uint8_t clock_prescaler, uint32_t 
 	/* use FLL as source clock */
 	tn_config = ADV_TIMER_TN_CONFIG_CLKSEL_SET(tn_config, 0x00);
 
+	/* counting in one direction
+	* (FIXME: we should support 2 direction counting) */
+	tn_config = ADV_TIMER_TN_CONFIG_UPDOWNSEL_SET(tn_config, 0x01);
+
 	/* set prescaler for slower counting */
 	tn_config = ADV_TIMER_TN_CONFIG_PRESC_SET(tn_config, clock_prescaler);
 
 
 	/* set threshold */
-	tn_threshold = ADV_TIMER_TN_THRESHOLD_TH_LO_SET(tn_threshold,
-		(counter_threshold >> ADV_TIMER_TN_THRESHOLD_TH_LO_BIT) &
-			(ADV_TIMER_TN_THRESHOLD_TH_LO_MASK >> ADV_TIMER_TN_THRESHOLD_TH_LO_BIT)
-		);
-	tn_threshold = ADV_TIMER_TN_THRESHOLD_TH_HI_SET(tn_threshold,
-		(counter_threshold >> ADV_TIMER_TN_THRESHOLD_TH_HI_BIT) &
-			(ADV_TIMER_TN_THRESHOLD_TH_HI_MASK >> ADV_TIMER_TN_THRESHOLD_TH_HI_BIT)
-		);
 
-	/* create command update */
-	tn_cmd = ADV_TIMER_TN_CMD_UPDATE_SET(tn_cmd, 0x01);
+	/* counter start from 0 */
+	tn_threshold = ADV_TIMER_TN_THRESHOLD_TH_LO_SET(tn_threshold, 0);
+
+	/* counting stop at this value */
+	tn_threshold = ADV_TIMER_TN_THRESHOLD_TH_HI_SET(tn_threshold, counter_threshold);
 
 
 	/* write register */
@@ -315,5 +388,6 @@ void adv_timer_config_frequency(size_t timer, uint8_t clock_prescaler, uint32_t 
 	adv_timer_tn_threshold_set(ARCHI_ADV_TIMER_ADDR, timer, tn_threshold);
 
 	/* then set update */
-	adv_timer_tn_cmd_set(ARCHI_ADV_TIMER_ADDR, timer, tn_cmd);
+
+	adv_timer_update(timer);
 }
