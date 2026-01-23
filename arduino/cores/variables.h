@@ -276,6 +276,17 @@
 #define  OUTPUT_OPENDRAIN   4
 
 /**
+	* interrupt mode definition
+	*/
+/*#define   LOW*/       /* to trigger the interrupt whenever the pin is low. */
+#define   CHANGE  11  /* to trigger the interrupt whenever
+					the pin changes value. */
+#define   RISING  12  /* to trigger when the pin goes from low to high. */
+#define   FALLING 13  /* for when the pin goes from high to low. */
+/*#define   HIGH*/      /* to trigger the interrupt whenever the pin is high. */
+
+
+/**
 	* definition of LED_BUILTIN
 	* use the one provided by platform board
 	*/
