@@ -250,10 +250,13 @@
 /*#define  HIGH  1
 #define  LOW   0*/
 
-/* make high and low definition align with bool definition,
-this require inclusion of stdbool.h */
-#define  HIGH  ((int) (true))
-#define  LOW   ((int) (false))
+/**
+	* make high and low definition align with bool definition,
+	* this require inclusion of stdbool.h
+	* c standard explictly define true = 1 and false = 0
+	*/
+#define  HIGH         ((int) (true))
+#define  LOW          ((int) (false))
 
 /**
 	* definition of INPUT, INPUT_PULLUP, and OUTPUT
@@ -272,7 +275,7 @@ this require inclusion of stdbool.h */
 	* use the one provided by platform board
 	*/
 #ifndef  LED_BUILTIN
-#define  LED_BUILTIN  BOARD_LED_BUILTIN
+#define  LED_BUILTIN   BOARD_LED_BUILTIN
 #endif /* ! defined(LED_BUILTIN) */
 
 /**
