@@ -21,12 +21,16 @@
 /* include stdbool.h for definition of true and false */
 #include <stdbool.h>
 
+/* include stddef.h for definition of size_t */
 #include <stddef.h>
+
+/* include stdint.h for definition of various fixed size integer */
 #include <stdint.h>
 
 /* platform custom definition, this is depend on setting in board variants */
 #include <board/platform_board.h>
 
+/* for PROGMEM and various pgm definition */
 #include "pgmspace.h"
 
 /**
