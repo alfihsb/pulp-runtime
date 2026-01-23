@@ -161,11 +161,19 @@
 #define memchr_P         memchr
 #define memcmp_P         memcmp
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L))
-#define memccpy_P        memccpy       /* POSIX.1-2008 */
-#else
-void *  memccpy_P(void * restrict dest, const void * restrict src,
-	int c, size_t n);
-#endif
+	#define memccpy_P        memccpy       /* POSIX.1-2008 */
+/* (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L)) */
+#else /* ! (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L)) */
+	#ifdef __cplusplus
+	extern "C"
+	{
+	#endif
+		void *  memccpy_P(void * restrict dest, const void * restrict src,
+			int c, size_t n);
+	#ifdef __cplusplus
+	} /* extern "C" */
+	#endif /* defined(__cplusplus) */
+#endif /* ! (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L)) */
 #define memcpy_P         memcpy
 /*#define memmem_P         memmem*/        /* extension (available in BSD) */
 /*#define memrchr_P        memrchr*/       /* extension */
@@ -175,30 +183,62 @@ void *  memccpy_P(void * restrict dest, const void * restrict src,
 #define strcmp_P         strcmp
 #define strcpy_P         strcpy
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L))
-#define stpcpy_P         stpcpy        /* POSIX.1-2008 */
-#else
-char *  stpcpy_P(char * restrict dst, const char * restrict src);
-#endif
+	#define stpcpy_P         stpcpy        /* POSIX.1-2008 */
+/* (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L)) */
+#else /* ! (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L)) */
+	#ifdef __cplusplus
+	extern "C"
+	{
+	#endif /* defined(__cplusplus) */
+		char *  stpcpy_P(char * restrict dst, const char * restrict src);
+	#ifdef __cplusplus
+	}
+	#endif /* defined(__cplusplus) */
+#endif /* ! (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L)) */
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L))
-#define strcasecmp_P     strcasecmp    /* POSIX.1-2001 */
-#else
-int     strcasecmp_P(const char *s1, const char *s2);
-#endif
+	#define strcasecmp_P     strcasecmp    /* POSIX.1-2001 */
+/* (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L)) */
+#else /* ! (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L)) */
+	#ifdef __cplusplus
+	extern "C"
+	{
+	#endif /* defined(__cplusplus) */
+		int     strcasecmp_P(const char *s1, const char *s2);
+	#ifdef __cplusplus
+	}
+	#endif /* defined(__cplusplus) */
+#endif /* ! (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L)) */
 /*#define strcasestr_P     strcasestr*/    /* extension */
 #define strcspn_P        strcspn
 /*#define strlcat_P        strlcat*/       /* BSD */
 /*#define strlcpy_P        strlcpy*/       /* BSD */
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L))
-#define strnlen_P        strnlen       /* POSIX.1-2008 */
-#else
-size_t  strnlen_P(const char *s, size_t maxlen);
-#endif
+	#define strnlen_P        strnlen       /* POSIX.1-2008 */
+/* (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L)) */
+#else /* ! (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L)) */
+	#ifdef __cplusplus
+	extern "C"
+	{
+	#endif /* defined(__cplusplus) */
+		size_t  strnlen_P(const char *s, size_t maxlen);
+	#ifdef __cplusplus
+	}
+	#endif /* defined(__cplusplus) */
+#endif /* ! (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L)) */
 #define strncmp_P        strncmp
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L))
-#define strncasecmp_P    strncasecmp   /* POSIX.1-2001 */
-#else
-int     strncasecmp_P(const char *s1, const char *s2, size_t n);
-#endif
+	#define strncasecmp_P    strncasecmp   /* POSIX.1-2001 */
+/* (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L)) */
+#else /* ! (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L)) */
+#ifdef __cplusplus
+	extern "C"
+	{
+	#endif /* defined(__cplusplus) */
+		int     strncasecmp_P(const char *s1, const char *s2, size_t n);
+	#ifdef __cplusplus
+	}
+	#endif /* defined(__cplusplus) */
+#endif /* ! (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L)) */
 #define strncat_P        strncat
 #define strncpy_P        strncpy
 #define strpbrk_P        strpbrk
@@ -208,11 +248,19 @@ int     strncasecmp_P(const char *s1, const char *s2, size_t n);
 #define strstr_P         strstr
 #define strtok_P         strtok
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L))
-#define strtok_rP        strtok_r      /* POSIX.1-2001 */
-#else
-char *  strtok_rP(char * restrict str, const char * restrict delim,
-	char ** restrict saveptr);
-#endif
+	#define strtok_rP        strtok_r      /* POSIX.1-2001 */
+/* (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L)) */
+#else /* ! (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L)) */
+	#ifdef __cplusplus
+	extern "C"
+	{
+	#endif /* defined(__cplusplus) */
+		char *  strtok_rP(char * restrict str, const char * restrict delim,
+			char ** restrict saveptr);
+	#ifdef __cplusplus
+	}
+	#endif /* defined(__cplusplus) */
+#endif /* ! (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L)) */
 
 /* pgm pointer for far pointer */
 #define strlen_PF        strlen_P
