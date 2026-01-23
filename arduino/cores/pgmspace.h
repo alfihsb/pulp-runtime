@@ -162,6 +162,9 @@
 #define memcmp_P         memcmp
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L))
 #define memccpy_P        memccpy       /* POSIX.1-2008 */
+#else
+void *  memccpy_P(void * restrict dest, const void * restrict src,
+	int c, size_t n);
 #endif
 #define memcpy_P         memcpy
 /*#define memmem_P         memmem*/        /* extension (available in BSD) */
@@ -173,9 +176,13 @@
 #define strcpy_P         strcpy
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L))
 #define stpcpy_P         stpcpy        /* POSIX.1-2008 */
+#else
+char *  stpcpy_P(char * restrict dst, const char * restrict src);
 #endif
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L))
 #define strcasecmp_P     strcasecmp    /* POSIX.1-2001 */
+#else
+int     strcasecmp_P(const char *s1, const char *s2);
 #endif
 /*#define strcasestr_P     strcasestr*/    /* extension */
 #define strcspn_P        strcspn
@@ -183,10 +190,14 @@
 /*#define strlcpy_P        strlcpy*/       /* BSD */
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L))
 #define strnlen_P        strnlen       /* POSIX.1-2008 */
+#else
+size_t  strnlen_P(const char *s, size_t maxlen);
 #endif
 #define strncmp_P        strncmp
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L))
 #define strncasecmp_P    strncasecmp   /* POSIX.1-2001 */
+#else
+int     strncasecmp_P(const char *s1, const char *s2, size_t n);
 #endif
 #define strncat_P        strncat
 #define strncpy_P        strncpy
@@ -198,30 +209,25 @@
 #define strtok_P         strtok
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L))
 #define strtok_rP        strtok_r      /* POSIX.1-2001 */
+#else
+char *  strtok_rP(char * restrict str, const char * restrict delim,
+	char ** restrict saveptr);
 #endif
 
 /* pgm pointer for far pointer */
 #define strlen_PF        strlen_P
-#if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L))
 #define strnlen_PF       strnlen_P     /* POSIX.1-2008 */
-#endif
 #define memcpy_PF        memcpy_P
 #define strcpy_PF        strcpy_P
-#if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200809L))
 #define stpcpy_PF        stpcpy_P      /* POSIX.1-2008 */
-#endif
 #define strncpy_PF       strncpy_P
 #define strcat_PF        strcat_P
 /*#define strlcat_PF       strlcat_P*/     /* BSD */
 #define strncat_PF       strncat_P
 #define strcmp_PF        strcmp_P
 #define strncmp_PF       strncmp_P
-#if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L))
 #define strcasecmp_PF    strcasecmp_P  /* POSIX.1-2001 */
-#endif
-#if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L))
 #define strncasecmp_PF   strncasecmp_P /* POSIX.1-2001 */
-#endif
 #define strchr_PF        strchr_P
 #define strstr_PF        strstr_P
 /*#define strlcpy_PF       strlcpy_P*/     /* BSD */
