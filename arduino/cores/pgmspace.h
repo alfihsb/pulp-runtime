@@ -23,8 +23,10 @@
 
 
 /**
-	* PROGMEM intended to be used for read-only data
-	* (const data), so put it in rodata section instead of text
+	* PROGMEM is intended to be used for read-only data (const data),
+	* so put it in .rodata section instead of .text
+	* NOTE: __attribute__ keyword is GNU extension,
+	*       please make work-around for other compiler!
 	*/
 #define    PROGMEM       __attribute__ ((section(".rodata")))
 
@@ -116,6 +118,11 @@
 #define PSTR_FAR(s)   (s)
 #endif
 
+/* constants string for storing in flash */
+#ifndef F
+#define F(s)          (s)
+#endif
+
 
 /* read based on integer size */
 #define pgm_read_byte_near                     pgm_read_byte
@@ -137,7 +144,7 @@
 #define pgm_read_dword                         pgm_read_u32
 #define pgm_read_qword                         pgm_read_u64
 /*#define pgm_read_float                         pgm_read_float*/
-#define pgm_read_ptr(address)     ((void *)  __pgm_read_value_from_pointer(uintptr_t, address))
+#define pgm_read_ptr(address)                __pgm_read_value_from_pointer(void *, address)
 
 /**
 	* get (far) address of a variable
