@@ -9,8 +9,10 @@
 
 /* platform-dependent definition of board */
 
-#ifndef __VARIANTS_BOARDS_SOFT_PULPISSIMO_PYNQ_Z1_H__
-#define __VARIANTS_BOARDS_SOFT_PULPISSIMO_PYNQ_Z1_H__
+/* use shared define between boards,
+* so only 1 header will be used between all boards */
+#ifndef __BOARD_PLATFORM_BOARD_H__
+#define __BOARD_PLATFORM_BOARD_H__
 
 /* available LED definion for soft-pulpissimo PYNQ-Z1 */
 
@@ -61,4 +63,4 @@
 #define BOARD_LED_BUILTIN   BOARD_LED1_GPIO_INDEX
 #endif /* ! defined(BOARD_LED_BUILTIN) */
 
-#endif /* ! defined(__VARIANTS_BOARDS_SOFT_PULPISSIMO_PYNQ_Z1_H__) */
+#endif /* ! defined(__BOARD_PLATFORM_BOARD_H__) */
