@@ -11,7 +11,7 @@
 	* this file can be included in both C and C++ code
 	*
 	* this file implement language reference requirement
-	* for variables of arduino
+	* for functions: characters of arduino
 	* see https://docs.arduino.cc/language-reference/#variables
 	*/
 
@@ -29,7 +29,7 @@ extern "C"
 	* Analyze if a char is alpha (that is a letter).
 	* Returns true if the input char contains a letter.
 	*/
-inline bool isAlpha(char thisChar)
+static inline bool isAlpha(char thisChar)
 {
 	/**
 		* if thisChar is NOT an alpha character, then isalpha will return 0
@@ -44,7 +44,7 @@ inline bool isAlpha(char thisChar)
 	* Analyze if a char is alphanumeric (that is a letter or a number).
 	* Returns true if the input char contains either a number or a letter.
 	*/
-inline bool isAlphaNumeric(char thisChar)
+static inline bool isAlphaNumeric(char thisChar)
 {
 	return (isalnum(thisChar) != 0);
 }
@@ -53,7 +53,7 @@ inline bool isAlphaNumeric(char thisChar)
 	* Analyze if a char is ASCII.
 	* Returns true if the input char contains an ASCII character.
 	*/
-inline bool isAscii(char thisChar)
+static inline bool isAscii(char thisChar)
 {
 	/* we can only use isascii() in POSIX.1-2001 with XSI */
 #if (defined(_POSIX_C_SOURCE) && ((_POSIX_C_SOURCE) >= 200112L) && \
@@ -70,7 +70,7 @@ inline bool isAscii(char thisChar)
 	* Analyze if a char is a control character.
 	* Returns true if the input char is a control character.
 	*/
-inline bool isControl(char thisChar)
+static inline bool isControl(char thisChar)
 {
 	return (iscntrl(thisChar) != 0);
 }
@@ -79,7 +79,7 @@ inline bool isControl(char thisChar)
 	* Analyze if a char is a digit (that is a number).
 	* Returns true if the input char is a number.
 	*/
-inline bool isDigit(char thisChar)
+static inline bool isDigit(char thisChar)
 {
 	return (isdigit(thisChar) != 0);
 }
@@ -89,7 +89,7 @@ inline bool isDigit(char thisChar)
 	* (space is printable but has no content).
 	* Returns true if the input char is printable.
 	*/
-inline bool isGraph(char thisChar)
+static inline bool isGraph(char thisChar)
 {
 	return (isgraph(thisChar) != 0);
 }
@@ -98,7 +98,7 @@ inline bool isGraph(char thisChar)
 	* Analyze if a char is a hexadecimal digit (A-F, 0-9).
 	* Returns true if the input char contains a hexadecimal digit.
 	*/
-inline bool isHexadecimalDigit(char thisChar)
+static inline bool isHexadecimalDigit(char thisChar)
 {
 	return (isxdigit(thisChar) != 0);
 }
@@ -107,7 +107,7 @@ inline bool isHexadecimalDigit(char thisChar)
 	* Analyze if a char is lower case (that is a letter in lower case).
 	* Returns true if the input char contains a letter in lower case.
 	*/
-inline bool isLowerCase(char thisChar)
+static inline bool isLowerCase(char thisChar)
 {
 	return (islower(thisChar) != 0);
 }
@@ -117,7 +117,7 @@ inline bool isLowerCase(char thisChar)
 	* (that is any character that produces an output, even a blank space).
 	* Returns true if the input char is printable.
 	*/
-inline bool isPrintable(char thisChar)
+static inline bool isPrintable(char thisChar)
 {
 	return (isprint(thisChar) != 0);
 }
@@ -127,7 +127,7 @@ inline bool isPrintable(char thisChar)
 	* a semicolon, an exclamation mark and so on).
 	* Returns true if the input char is punctuation.
 	*/
-inline bool isPunct(char thisChar)
+static inline bool isPunct(char thisChar)
 {
 	return (ispunct(thisChar) != 0);
 }
@@ -138,7 +138,7 @@ inline bool isPunct(char thisChar)
 	* form feed ('\f'), newline ('\n'), carriage return ('\r'),
 	* horizontal tab ('\t'), or vertical tab ('\v').
 	*/
-inline bool isSpace(char thisChar)
+static inline bool isSpace(char thisChar)
 {
 	return (isspace(thisChar) != 0);
 }
@@ -147,7 +147,7 @@ inline bool isSpace(char thisChar)
 	* Analyze if a char is upper case (that is, a letter in upper case).
 	* Returns true if the input char is upper case.
 	*/
-inline bool isUpperCase(char thisChar)
+static inline bool isUpperCase(char thisChar)
 {
 	return (isupper(thisChar) != 0);
 }
@@ -156,7 +156,7 @@ inline bool isUpperCase(char thisChar)
 	* Analyze if a char is a space character.
 	* Returns true if the input char is a space or horizontal tab ('\t').
 	*/
-inline bool isWhitespace(char thisChar)
+static inline bool isWhitespace(char thisChar)
 {
 	return (isblank(thisChar) != 0);
 }
