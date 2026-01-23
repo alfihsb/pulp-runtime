@@ -259,16 +259,17 @@
 #define  LOW          ((int) (false))
 
 /**
-	* definition of INPUT, INPUT_PULLUP, and OUTPUT
+	* definition of PinMode: INPUT, INPUT_PULLUP, OUTPUT, etc.
 	*
 	* arduino language reference manual only require us to define these keywords
 	* without clear definition of data type and value
 	* just use int then
 	*/
-#define  INPUT         0  /* 0b00 */
-#define  INPUT_PULLUP  2  /* 0b10 */
-
-#define  OUTPUT        1  /* 0b01 */
+#define  INPUT              0
+#define  OUTPUT             1
+#define  INPUT_PULLUP       2
+#define  INPUT_PULLDOWN     3
+#define  OUTPUT_OPENDRAIN   4
 
 /**
 	* definition of LED_BUILTIN
@@ -282,6 +283,12 @@
 	* definition of true and false
 	*/
 /* already given by stdbool.h */
+
+/**
+	* bit order
+	*/
+#define  LSBFIRST         0
+#define  MSBFIRST         1
 
 /**
 	* **************************************************
